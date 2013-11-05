@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+require "trollop"
+require "./lib/commands"
+
+SUB_COMMANDS = %w(rec cron list)
+global_opts = Trollop::options do
+  version "rudika  (c) 2013 harupong"
+  banner <<-EOS
+  rudika is an application that lets you rip off the stream of All JP radio stations,
+  including NHK and Radiko
+
+  Usage:
+           rudika rec [options]
+           rudika cron [options]
+           rudika list [options]
+
+  Options for rudika command:
+  EOS
+  stop_on SUB_COMMANDS
+end
+
+cmd = ARGV.shift # get the subcommand
+cmd_opts = case cmd
+  when "rec" # parse rec options
+    Trollop::options do
+      banner "start recording radio stream"
+#      opt :station, "Choose station for recording", :short => "-s", :required => true
+    end
+  when "cron"  # parse cron options
+    Trollop::options do
+      banner "Set recording schedule"
+      opt :add,     "Add recording schedule",     :short => "-a"
+      opt :delete,  "Delete recording schedule",  :short => "-d"
+      opt :show,    "Show recording schedule",    :short => "-s"
+    end
+  when "list"  # parse list options
+    Trollop::options do
+      banner "list available stations"
+    end
+  else
+    Trollop::die "unknown subcommand #{cmd.inspect}"
+  end
+
+puts "Global options: #{global_opts.inspect}"
+puts "Subcommand: #{cmd.inspect}"
+puts "Subcommand options: #{cmd_opts.inspect}"
+puts "Remaining arguments: #{ARGV.inspect}"
+
+def station
+  ARGV.shift
+end
+
+def record
+  unless ARGV.size == 1
+    abort "ERROR: Only one station can be recorded at once. Aborting."
+  end
+  s = station
+  case s
+  when "NHK1" , "NHK2" , "FM"
+    system ("ripdiru #{s}")
+  else
+    system ("ripdiko #{s}")
+  end
+end
+
+def cron
+  puts "this is schedule method"
+end
+
+def list
+  puts "this is list method"
+end
+
+case cmd
+when "rec"
+  record
+when "cron"
+  cron
+when "list"
+  list
+end

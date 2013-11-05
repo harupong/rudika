@@ -1,0 +1,20 @@
+GIT
+  remote: https://bitbucket.org/harupong/ripdiko.git
+  revision: baf39ca74ba46a7d8a874f168f9ae112cf6ad350
+  branch: ripdiko-jpradio
+  specs:
+    ripdiko (0.3.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ripdiru (0.1.2)
+    trollop (2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ripdiko!
+  ripdiru
+  trollop
