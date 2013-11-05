@@ -35,7 +35,8 @@ class Rudika < Thor
   end
 
   desc "schedule", "schedules a recording"
-    def schedule
-      puts "scheduling..."
-    end
+  def schedule
+    puts "scheduling..."
+  end
+
 end
