@@ -5,14 +5,17 @@ require "./lib/stations"
 
 class Rudika < Thor
 
-  @@nhk_list = get_nhk_stations
-  @@radiko_list = get_radiko_stations
+  def initialize(args = [], options = {}, config = {})
+    super
+    @nhk_list = get_nhk_stations
+    @radiko_list = get_radiko_stations
+  end
 
   desc "rec", "rip and record the stream from Radiko/NHK"
   option :station, :required => true, :aliases => "-s"
   def rec
-    nhk = @@nhk_list.keys
-    radiko = @@radiko_list.keys
+    nhk = @nhk_list.keys
+    radiko = @radiko_list.keys
     station = options[:station]
 
     case station
@@ -27,7 +30,7 @@ class Rudika < Thor
 
   desc "list", "lists all available stations"
   def list
-    all_stations = @@nhk_list.merge(@@radiko_list)
+    all_stations = @nhk_list.merge(@radiko_list)
 
     all_stations.each.with_index(1) do |a, id|
       puts "#{id}: #{a}"
