@@ -1,9 +1,9 @@
 GIT
-  remote: https://bitbucket.org/harupong/ripdiko.git
-  revision: baf39ca74ba46a7d8a874f168f9ae112cf6ad350
-  branch: ripdiko-jpradio
+  remote: https://github.com/miyagawa/ripdiko.git
+  revision: 80a99d1f174c37b1cf25d406173e0d79ffee84a7
   specs:
-    ripdiko (0.3.0)
+    ripdiko (0.2.0)
+      nokogiri
 
 GEM
   remote: https://rubygems.org/
@@ -17,8 +17,11 @@ GEM
     atomic (1.1.14)
     chronic (0.10.2)
     i18n (0.6.5)
+    mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
     ripdiru (0.1.2)
     thor (0.18.1)
     thread_safe (0.1.3)
