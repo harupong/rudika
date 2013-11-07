@@ -74,15 +74,15 @@ class Rudika < Thor
       dayname = Date::DAYNAMES[t.wday]
       starttime = "#{t.hour}:#{t.minute}"
 
-    case frequency
+    str = case frequency
     when "D"
-      str = "every 1.day, :at => '#{starttime}' do command \"rudika rec -s #{station}\" end"
+      "every 1.day, :at => '#{starttime}' do record \"#{station}\" end"
     when "W"
-      str = "every :#{dayname}, :at => '#{starttime}' do command \"rudika rec -s #{station}\" end"
+      "every :#{dayname}, :at => '#{starttime}' do record \"#{station}\" end"
     when "M"
       # must pass monthname to :at symbol so that `whenever` can parse it correctly
       # https://github.com/javan/whenever/issues/13#issuecomment-18869
-      str = "every 1.month, :at => '#{monthname} #{dayofmonth} #{starttime}' do command \"rudika rec -s #{station}\" end"
+      "every 1.month, :at => '#{monthname} #{dayofmonth} #{starttime}' do record \"#{station}\" end"
     end
 
     add_whenever_config(str)
