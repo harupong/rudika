@@ -1,5 +1,14 @@
 # rudika
 
+## Installation
+
+First, install rudika using bundler.
+
+    git clone https://github.com/harupong/rudika.git
+    cd rudika
+    echo "set :path, \"`pwd`\"" >> config/schedule.rb
+    bundle install
+
 ## TODO
 
 1. Switch command-line options handling to commander
