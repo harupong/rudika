@@ -62,17 +62,15 @@ class Rudika < Thor
   end
 
   def add_schedule
-    print "Enter the station:"
-      station = STDIN.gets.chomp.upcase
-    print "Enter the frequency. Daily, Weekly, Monthly[D,W,M]:"
-      frequency = STDIN.gets.chomp.upcase
-    print "Enter the date[YYYY-MM-DD hh:mm]:"
-      inputtime = STDIN.gets.chomp
-      t = DateTime.strptime("#{inputtime}:00+0900", '%Y-%m-%d %H:%M:%S%z')
-      dayofmonth = t.day
-      monthname =Date::MONTHNAMES[t.month]
-      dayname = Date::DAYNAMES[t.wday]
-      starttime = "#{t.hour}:#{t.minute}"
+    station = ask("Enter the station:")
+    frequency = ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:")
+    inputtime = ask("Enter the date[YYYY-MM-DD hh:mm]:")
+    formatedtime = DateTime.strptime("#{inputtime}:00+0900", '%Y-%m-%d %H:%M:%S%z')
+
+    dayofmonth = formatedtime.day
+    monthname =Date::MONTHNAMES[formatedtime.month]
+    dayname = Date::DAYNAMES[formatedtime.wday]
+    starttime = "#{formatedtime.hour}:#{formatedtime.minute}"
 
     str = case frequency
     when "D"
