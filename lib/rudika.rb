@@ -2,6 +2,8 @@
 
 require 'thor'
 require 'date'
+require 'yaml'
+require 'erb'
 require './lib/stations'
 
 class Rudika < Thor
@@ -43,58 +45,114 @@ class Rudika < Thor
   option :delete, :type => :boolean, :aliases => "-d"
   option :show, :type => :boolean, :default => true, :aliases => "-s"
   def schedule
+    schedules = open("config/rudika.yaml") do |file|
+      YAML.load(file)
+    end
+
+    scheduler = Scheduler.new(schedules)
+
     case
     when options[:add]
-      add_schedule
+      scheduler.add_schedule
     when options[:delete]
-      delete_schedule
+      scheduler.delete_schedule
     when options[:show]
       system ("whenever -f")
     end
   end
+end
 
-  protected
+class Scheduler
 
-  def add_whenever_config(str)
-    File.open("config/schedule.rb","a") do |file|
-        file.write("#{str}\n")
-    end
+  attr_reader :schedules
+
+  def initialize(schedules)
+    @schedules = schedules
+  end
+
+  def ask(question)
+    print question
+    STDIN.gets.chomp
   end
 
   def add_schedule
-    station = ask("Enter the station:")
-    frequency = ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:")
-    inputtime = ask("Enter the date[YYYY-MM-DD hh:mm]:")
-    formatedtime = DateTime.strptime("#{inputtime}:00+0900", '%Y-%m-%d %H:%M:%S%z')
+    schedule = {
+      "station" => ask("Enter the station:"),
+      "frequency" => ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:"),
+      "inputtime" => ask("Enter the date[YYYY-MM-DD hh:mm]:")
+    }
 
-    dayofmonth = formatedtime.day
-    monthname =Date::MONTHNAMES[formatedtime.month]
-    dayname = Date::DAYNAMES[formatedtime.wday]
-    starttime = "#{formatedtime.hour}:#{formatedtime.minute}"
-
-    str = case frequency
-    when "D"
-      "every 1.day, :at => '#{starttime}' do record \"#{station}\" end"
-    when "W"
-      "every :#{dayname}, :at => '#{starttime}' do record \"#{station}\" end"
-    when "M"
-      # must pass monthname to :at symbol so that `whenever` can parse it correctly
-      # https://github.com/javan/whenever/issues/13#issuecomment-18869
-      "every 1.month, :at => '#{monthname} #{dayofmonth} #{starttime}' do record \"#{station}\" end"
-    end
-
-    add_whenever_config(str)
-    system ("whenever -i")
+    add(schedule)
+    overwrite_yaml
+    overwrite_whenever_config
+    update_whenever
   end
 
   def delete_schedule
-    print "are you sure to delete schedule?[Yn]:"
-      delete_confirmation = STDIN.gets.chomp
-      case delete_confirmation.upcase
-      when "Y"
-        puts "YES"
-      else
-        puts "NO"
+    @schedules.each.with_index do |s, i|
+      puts "#{i}: #{s}"
+    end
+    id = ask("Select the schedule you want to delete:")
+    delete(id.to_i)
+    overwrite_yaml
+    overwrite_whenever_config
+    update_whenever
+  end
+
+  def update_whenever
+    system("whenever -i")
+  end
+
+  def add(schedule)
+    @schedules.push(schedule)
+  end
+
+  def delete(pos)
+    @schedules.delete_at(pos)
+  end
+
+  def overwrite_yaml
+    open("config/rudika.yaml", "w+") do |file|
+      YAML.dump(@schedules, file)
+    end
+  end
+
+  def overwrite_whenever_config
+    template = <<EOS
+# Use this file to easily define all of your cron jobs.
+# Learn more: http://github.com/javan/whenever
+# uncomment the line below if you wish to use zsh for cron jobs for rudika
+# set :job_template, "/usr/bin/zsh -l -c ':job'"
+
+job_type :record, 'cd :path && bundle exec ./rudika rec -s :task'
+EOS
+
+    str = "\n"
+    @schedules.each do |s|
+      formatedtime = DateTime.parse(s["inputtime"])
+      starttime = "#{formatedtime.hour}:#{formatedtime.minute}"
+      dayname = Date::DAYNAMES[formatedtime.wday]
+      monthname = Date::MONTHNAMES[formatedtime.month]
+      dayofmonth = formatedtime.day
+      station = s["station"]
+
+      case s["frequency"]
+      when "D"
+        str.concat("every 1.day, :at => '#{starttime}' do record \"#{station}\" end\n")
+      when "W"
+        str.concat("every :#{dayname}, :at => '#{starttime}' do record \"#{station}\" end\n")
+      when "M"
+      # must pass monthname to :at symbol so that `whenever` can parse it correctly
+      # https://github.com/javan/whenever/issues/13#issuecomment-18869
+        str.concat(
+          "every 1.month, :at => '#{monthname} #{dayofmonth} #{starttime}' do record \"#{station}\" end\n"
+        )
       end
+    end
+
+    whenever_schedule = template.concat(str)
+    open("config/schedule.rb", "w+") do |file|
+      file.write(whenever_schedule)
+    end
   end
 end
