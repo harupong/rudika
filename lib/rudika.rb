@@ -5,20 +5,21 @@ require 'date'
 require 'yaml'
 require 'erb'
 
+file = open("config/stations.yaml")
+NHK_LIST, RADIKO_LIST = YAML.load_stream(file)
+file.close
+
 class Rudika < Thor
 
   def initialize(args = [], options = {}, config = {})
     super
-    file = open("config/stations.yaml")
-    @nhk_list, @radiko_list = YAML.load_stream(file)
-    file.close
   end
 
   desc "rec", "rip and record the stream from Radiko/NHK"
   option :station, :required => true, :aliases => "-s"
   def rec
-    nhk = @nhk_list.keys
-    radiko = @radiko_list.keys
+    nhk = NHK_LIST.keys
+    radiko = RADIKO_LIST.keys
     station = options[:station]
 
     case station
@@ -33,7 +34,7 @@ class Rudika < Thor
 
   desc "list", "lists all available stations"
   def list
-    all_stations = @nhk_list.merge(@radiko_list)
+    all_stations = NHK_LIST.merge(RADIKO_LIST)
 
     all_stations.each.with_index(1) do |a, id|
       puts "#{id}: #{a}"
