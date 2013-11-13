@@ -67,7 +67,7 @@ class Scheduler
   attr_reader :schedules
 
   def initialize(schedules)
-    @schedules = schedules
+    @schedules = schedules || []
   end
 
   def ask(question)
@@ -83,23 +83,25 @@ class Scheduler
     }
 
     add(schedule)
-    overwrite_yaml
-    overwrite_whenever_config
     update_whenever
   end
 
   def delete_schedule
-    @schedules.each.with_index do |s, i|
-      puts "#{i}: #{s}"
+    unless @schedules.empty?
+      @schedules.each.with_index do |s, i|
+        puts "#{i}: #{s}"
+      end
+      id = ask("Select the schedule you want to delete:")
+      delete(id.to_i)
+      update_whenever
+    else
+      abort "No schedule to delete."
     end
-    id = ask("Select the schedule you want to delete:")
-    delete(id.to_i)
-    overwrite_yaml
-    overwrite_whenever_config
-    update_whenever
   end
 
   def update_whenever
+    overwrite_yaml
+    overwrite_whenever_config
     system("whenever -i")
   end
 
