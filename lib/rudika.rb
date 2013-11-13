@@ -4,14 +4,14 @@ require 'thor'
 require 'date'
 require 'yaml'
 require 'erb'
-require './lib/stations'
 
 class Rudika < Thor
 
   def initialize(args = [], options = {}, config = {})
     super
-    @nhk_list = get_nhk_stations
-    @radiko_list = get_radiko_stations
+    file = open("config/stations.yaml")
+    @nhk_list, @radiko_list = YAML.load_stream(file)
+    file.close
   end
 
   desc "rec", "rip and record the stream from Radiko/NHK"
