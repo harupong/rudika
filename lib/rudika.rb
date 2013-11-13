@@ -76,6 +76,11 @@ class Scheduler
     STDIN.gets.chomp
   end
 
+  def exists?(station)
+    exist_stations = NHK_LIST.keys + RADIKO_LIST.keys
+    exist_stations.include?(station)
+  end
+
   def add_schedule
     schedule = {
       "station" => ask("Enter the station:"),
@@ -83,8 +88,12 @@ class Scheduler
       "inputtime" => ask("Enter the date[YYYY-MM-DD hh:mm]:")
     }
 
-    add(schedule)
-    update_whenever
+    if exists?(schedule["station"])
+      add(schedule)
+      update_whenever
+    else
+      abort ("invalid station name. try `list` command.")
+    end
   end
 
   def delete_schedule
