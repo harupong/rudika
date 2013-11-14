@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'ripdiru'
+gem 'ripdiru', '>= 0.2.0'
 gem 'thor'
 gem 'whenever'
 
