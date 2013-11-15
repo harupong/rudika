@@ -12,6 +12,7 @@ class Rudika < Thor
 
   def initialize(args = [], options = {}, config = {})
     super
+    puts "rudika version 0.0.1"
   end
 
   desc "rec", "rip and record the stream from Radiko/NHK"
