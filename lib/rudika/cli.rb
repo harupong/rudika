@@ -4,11 +4,11 @@ require 'thor'
 require 'date'
 require 'yaml'
 
-file = open("config/stations.yaml")
-NHK_LIST, RADIKO_LIST = YAML.load_stream(file)
-file.close
-
 module Rudika
+  file = open("config/stations.yaml")
+  NHK_LIST, RADIKO_LIST = YAML.load_stream(file)
+  file.close
+
   class CLI < Thor
 
     def initialize(args = [], options = {}, config = {})
