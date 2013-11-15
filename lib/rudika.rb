@@ -3,7 +3,6 @@
 require 'thor'
 require 'date'
 require 'yaml'
-require 'erb'
 
 file = open("config/stations.yaml")
 NHK_LIST, RADIKO_LIST = YAML.load_stream(file)
