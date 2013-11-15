@@ -2,4 +2,4 @@
 
 require "./lib/rudika"
 
-Rudika.start(ARGV)
+Rudika::CLI.start(ARGV)
