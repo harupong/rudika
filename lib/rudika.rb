@@ -3,6 +3,7 @@
 require 'thor'
 require 'date'
 require 'yaml'
+require './lib/rudika/version.rb'
 
 file = open("config/stations.yaml")
 NHK_LIST, RADIKO_LIST = YAML.load_stream(file)
@@ -13,7 +14,6 @@ module Rudika
 
     def initialize(args = [], options = {}, config = {})
       super
-      puts "rudika version 0.0.1"
     end
 
     desc "rec", "rip and record the stream from Radiko/NHK"
@@ -61,6 +61,11 @@ module Rudika
       when options[:show]
         system ("whenever -f")
       end
+    end
+
+    desc "version", "shows version info"
+    def version
+      puts "Rudika Ver. #{Rudika::VERSION}"
     end
   end
 
