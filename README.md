@@ -12,7 +12,6 @@
 
     git clone https://github.com/harupong/rudika.git
     cd rudika
-    echo "set :path, \"`pwd`\"" >> config/schedule.rb
     bundle install
 
 `bundle exec ./rudika` でヘルプが表示されれば、**rudika** のインストールは完了です。
