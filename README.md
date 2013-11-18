@@ -14,19 +14,19 @@
     cd rudika
     bundle install
 
-`bundle exec ./rudika` でヘルプが表示されれば、**rudika** のインストールは完了です。
+`bundle exec rudika` でヘルプが表示されれば、**rudika** のインストールは完了です。
 
 ## 使い方
 
 現在配信中のラジオを録音するには
 
-    $ bundle exec ./rudika rec -s <ラジオ局の略称>
+    $ bundle exec rudika rec -s <ラジオ局の略称>
 
 を実行します。録音は自動で停止し、MP3 ファイルが `~/Music/Radiko` か `~/Music/Radiru` に保存されます。録音を強制停止したい場合は、`ctrl-c` で止めてください。
 
 ラジオ局の略称が分からない場合は、
 
-    $ bundle exec ./rudika list | grep <ラジオ局名の一部>
+    $ bundle exec rudika list | grep <ラジオ局名の一部>
 
 と実行して目当ての略称を確認しましょう。
 
@@ -34,15 +34,15 @@
 
 **rudika** は crontab と連動した録音予約機能を備えています。
 
-    $ bundle exec ./rudika schedule -a
+    $ bundle exec rudika schedule -a
 
 を実行すると録音予約メニューが出てきますので、ラジオ局や日時を入力してください。crontab への追加は自動で処理されます。登録した予約を削除したければ
 
-    $ bundle exec ./rudika schedule -d
+    $ bundle exec rudika schedule -d
 
 で削除メニューを呼び出しましょう。また、
 
-    $ bundle exec ./rudika schedule
+    $ bundle exec rudika schedule
 
 とオプションなしで schedule サブコマンドを呼び出せば、現在登録されている録音予約が一覧表示されます。
 
@@ -67,14 +67,13 @@ First, install rudika and dependencies using bundler.
 
     git clone https://github.com/harupong/rudika.git
     cd rudika
-    echo "set :path, \"`pwd`\"" >> config/schedule.rb
     bundle install
 
 Then, `which ffmpeg` to make sure ffmpeg executable is placed in $PATH. If not, please install it.
 
 ## How To Use
 
-Go into the directory you cloned rudika repo, then `bundle exec ./rudika` to see the help.
+Go into the directory you cloned rudika repo, then `bundle exec rudika` to see the help.
 
 There commands are available:
 
