@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require './lib/rudika/cli'
-require './lib/rudika/scheduler'
-require './lib/rudika/version'
+require 'rudika/cli'
+require 'rudika/scheduler'
+require 'rudika/version'
 
 module Rudika
   # anything ever comes here?

@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'ripdiru', '>= 0.2.0'
-gem 'thor'
-gem 'whenever'
+#Specify your gem's dependencies in rudika.gemspec
+gemspec
 
 # pick which ripdiko to use. The original on github which is statble,
 # or the modified on bitbucket which has less dependancy and is integrated with jpradio.herokuapp.
