@@ -58,7 +58,7 @@ module Rudika
       when options[:delete]
         scheduler.delete_schedule
       when options[:show]
-        system ("whenever -f")
+        scheduler.show_schedule
       end
     end
 

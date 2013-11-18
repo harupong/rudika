@@ -50,6 +50,29 @@ module Rudika
       end
     end
 
+    def show_schedule
+      unless schedules # YAML is returning false if file is empty
+        abort "No Schedule for rudika."
+      end
+      puts "Your schedules for rudika:"
+      schedules.each.with_index do |s, id|
+        station = s["station"]
+        d = DateTime.parse("#{s["inputtime"]}+0900")
+        date = d.strftime('%Y-%m-%d')
+        t = d.strftime('%H:%M')
+        freq = case s["frequency"]
+               when "D"
+                 "Daily at #{t}"
+               when "W"
+                 dayname = Date::DAYNAMES[d.wday]
+                 "Weekly on #{dayname} at #{t}"
+               when "M"
+                 "Monthly on #{d.day} at #{t}"
+               end
+        puts "#{id}: #{station}, #{freq}"
+      end
+    end
+
     def update_whenever
       overwrite_yaml
       overwrite_whenever_config
