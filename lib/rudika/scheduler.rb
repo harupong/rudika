@@ -113,7 +113,7 @@ EOS
       str = "\n"
       @schedules.each do |s|
         formatedtime = DateTime.parse(s["inputtime"])
-        starttime = "#{formatedtime.hour}:#{formatedtime.minute}"
+        starttime = formatedtime.strftime('%H:%M')
         dayname = Date::DAYNAMES[formatedtime.wday]
         monthname = Date::MONTHNAMES[formatedtime.month]
         dayofmonth = formatedtime.day
