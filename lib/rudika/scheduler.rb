@@ -17,24 +17,33 @@ module Rudika
       STDIN.gets.chomp
     end
 
-    def exists?(station)
+    def station_exists?(station)
       exist_stations = NHK_LIST.keys + RADIKO_LIST.keys
       exist_stations.include?(station)
     end
 
     def add_schedule
-      schedule = {
-        "station" => ask("Enter the station:"),
-        "frequency" => ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:"),
-        "inputtime" => ask("Enter the date[YYYY-MM-DD hh:mm]:")
-      }
-
-      if exists?(schedule["station"])
-        add(schedule)
-        update_whenever
-      else
-        abort ("invalid station name. try `list` command.")
+      schedule = {"station" => ask("Enter the station:")}
+      unless station_exists?(schedule["station"])
+        abort ("invalid station name. aborted. try `list` command.")
       end
+
+      schedule = {
+        "frequency" => ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:")
+      }
+      unless schedule["frequency"].match(/[DdWwMm]/)
+        abort ("invalid frequency. aborted. it must be D, W, or M.")
+      end
+
+      schedule = {"inputtime" => ask("Enter the date[YYYY-MM-DD hh:mm]:")}
+      begin
+        DateTime.parse(schedule["inputtime"])
+      rescue ArgumentError
+        abort ("invalid date format. aborted.")
+      end
+
+      add(schedule)
+      update_whenever
     end
 
     def delete_schedule
