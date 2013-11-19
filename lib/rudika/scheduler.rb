@@ -28,14 +28,12 @@ module Rudika
         abort ("invalid station name. aborted. try `list` command.")
       end
 
-      schedule = {
-        "frequency" => ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:")
-      }
+      schedule["frequency"] = ask("Enter the frequency. Daily, Weekly, Monthly[D,W,M]:")
       unless schedule["frequency"].match(/[DdWwMm]/)
         abort ("invalid frequency. aborted. it must be D, W, or M.")
       end
 
-      schedule = {"inputtime" => ask("Enter the date[YYYY-MM-DD hh:mm]:")}
+      schedule["inputtime"] = ask("Enter the date[YYYY-MM-DD hh:mm]:")
       begin
         DateTime.parse(schedule["inputtime"])
       rescue ArgumentError
