@@ -24,8 +24,10 @@ module Rudika
 
       case station
       when *nhk
+        banner
         system ("ripdiru #{station}")
       when *radiko
+        banner
         system ("ripdiko #{station}")
       else
         puts "invalid station name. try `list` command."
@@ -66,6 +68,15 @@ module Rudika
     option :aliases => "-v"
     def version
       puts "Rudika Ver. #{Rudika::VERSION}"
+    end
+
+    private
+
+    def banner
+      puts <<-EOS
+===================================================
+Start recording #{options[:station]} on #{`date`}
+      EOS
     end
   end
 end
