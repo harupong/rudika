@@ -45,23 +45,25 @@ module Rudika
     end
 
     def delete_schedule
-      unless @schedules.empty?
-        @schedules.each.with_index do |s, i|
-          puts "#{i}: #{s}"
-        end
-        id = ask("Select the schedule you want to delete:")
-        delete(id.to_i)
-        update_whenever
-      else
+      if @schedules.empty?
         abort "No schedule to delete."
       end
+
+      list_schedule
+      id = ask("Select the schedule you want to delete:")
+      delete(id.to_i)
+      update_whenever
     end
 
     def show_schedule
-      unless schedules # YAML is returning false if file is empty
+      if schedules.empty?
         abort "No Schedule for rudika."
       end
       puts "Your schedules for rudika:"
+      list_schedule
+    end
+
+    def list_schedule
       schedules.each.with_index do |s, id|
         station = s["station"]
         d = DateTime.parse("#{s["inputtime"]}+0900")
